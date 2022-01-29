@@ -1,0 +1,36 @@
+version: '3'
+
+networks: 
+  todoapi:      
+    driver: bridge
+    name: todoapi
+
+services:
+  app:
+    container_name: todoapi.app
+    image: vitormoschetta/todoapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    expose:
+      - 5000   
+    volumes:
+      - ./TodoApi/appsettings.DockerDevelopment.json:/app/appsettings.json
+    networks:
+      - todoapi
+    depends_on:
+      - db
+
+  db:
+    container_name: todoapi.db
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "MySql2019!"
+      MYSQL_DATABASE: "todoapidb"
+    ports:
+      - "3306:3306"  
+    networks:
+      - todoapi
+   
