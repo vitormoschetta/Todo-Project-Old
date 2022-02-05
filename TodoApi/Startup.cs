@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using src.Data;
+using TodoApi.Data;
 
 namespace TodoApi
 {
@@ -19,21 +20,27 @@ namespace TodoApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "src", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoApi", Version = "v1" });
             });
 
+            var connectionStringEnv = Configuration["CONNECTION_STRING"];
+
+            var connectionString = string.IsNullOrWhiteSpace(connectionStringEnv)
+                ? Configuration.GetConnectionString("DefaultConnection")
+                : connectionStringEnv;
+
             services.AddDbContext<AppDbContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseMySQL(connectionString));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context)
         {
             if (env.IsDevelopment())
@@ -41,12 +48,17 @@ namespace TodoApi
                 app.UseDeveloperExceptionPage();
             }
 
+            if (env.IsProduction() || env.IsStaging())
+            {
+                app.UseExceptionHandler("/Error");
+            }
+
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "src v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TodoApi v1"));
 
             if (context.Database.GetPendingMigrations().Any())
             {
-                context.Database.Migrate();                
+                context.Database.Migrate();
             }
 
             app.UseHttpsRedirection();

@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace TodoApi
 {
@@ -18,6 +13,17 @@ namespace TodoApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, config) =>
+                {
+                    config.AddIniFile("./config.ini", optional: true, reloadOnChange: true);
+                    config.AddJsonFile("./config.json", optional: true, reloadOnChange: true);
+                    config.AddXmlFile("./config.xml", optional: true, reloadOnChange: true);
+
+                    if (args != null)
+                    {
+                        config.AddCommandLine(args);
+                    }
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

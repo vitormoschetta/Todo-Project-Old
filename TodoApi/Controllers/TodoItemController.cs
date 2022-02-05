@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using src.Data;
-using src.Models;
+using TodoApi.Data;
+using TodoApi.Models;
 
-namespace src.Controllers
+namespace TodoApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TodoItemController : ControllerBase
+    public class TodoItemController : ApiBaseController
     {
-        protected readonly AppDbContext _context;
+        private readonly AppDbContext _context;
 
         public TodoItemController(AppDbContext context)
         {
@@ -20,27 +20,39 @@ namespace src.Controllers
         }
 
         [HttpPost]
-        public async Task<GenericResponse> Create([FromBody] TodoItem command)
+        public async Task<ActionResult<GenericResponse>> Create([FromBody] TodoItem command)
         {
+            GenericResponse genericResponse;
+
             try
             {
                 await _context.TodoItem.AddAsync(command);
 
                 await _context.SaveChangesAsync();
 
-                return new GenericResponse(true, "Create sucessfuly");
+                genericResponse = new GenericResponse("Sucessfuly");
+
+                return CustomResponse(genericResponse);
             }
             catch (Exception ex)
             {
-                return new GenericResponse(false, ex.Message);
+                genericResponse = new GenericResponse(ex.Message, EOutputType.Failure);
             }
+
+            return CustomResponse(genericResponse);
         }
 
 
         [HttpPut("{id}")]
-        public async Task<GenericResponse> Update(int id, [FromBody] TodoItem command)
+        public async Task<ActionResult<GenericResponse>> Update(int id, [FromBody] TodoItem command)
         {
-            if (id != command.Id) return new GenericResponse(false, "Id inválido. ");
+            GenericResponse genericResponse;
+
+            if (id != command.Id)
+            {
+                genericResponse = new GenericResponse("Invalid ID", EOutputType.InvalidInput);
+                return CustomResponse(genericResponse);
+            }
 
             try
             {
@@ -48,44 +60,52 @@ namespace src.Controllers
 
                 if (todoItem is null)
                 {
-                    return new GenericResponse(false, "TodoItem not found");
+                    genericResponse = new GenericResponse("TodoItem not found", EOutputType.NotFound);
+                    return CustomResponse(genericResponse);
                 }
 
                 _context.TodoItem.Update(todoItem);
 
                 await _context.SaveChangesAsync();
 
-                return new GenericResponse(true, "Update sucessfuly");
+                genericResponse = new GenericResponse("Sucessfuly");
             }
             catch (Exception ex)
             {
-                return new GenericResponse(false, ex.Message);
+                genericResponse = new GenericResponse(ex.Message, EOutputType.Failure);
             }
+
+            return CustomResponse(genericResponse);
         }
 
 
         [HttpDelete("{id}")]
-        public async Task<GenericResponse> Delete(int id, [FromBody] TodoItem command)
+        public async Task<ActionResult<GenericResponse>> Delete(int id)
         {
+            GenericResponse genericResponse;
+
             try
             {
                 var todoItem = await _context.TodoItem.FindAsync(id);
 
                 if (todoItem is null)
                 {
-                    return new GenericResponse(false, "TodoItem not found");
+                    genericResponse = new GenericResponse("TodoItem not found", EOutputType.NotFound);
+                    return CustomResponse(genericResponse);
                 }
 
                 _context.TodoItem.Remove(todoItem);
 
                 await _context.SaveChangesAsync();
 
-                return new GenericResponse(true, "Create sucessfuly");
+                genericResponse = new GenericResponse("Sucessfuly");
             }
             catch (Exception ex)
             {
-                return new GenericResponse(false, ex.Message);
+                genericResponse = new GenericResponse(ex.Message, EOutputType.Failure);
             }
+
+            return CustomResponse(genericResponse);
         }
 
 

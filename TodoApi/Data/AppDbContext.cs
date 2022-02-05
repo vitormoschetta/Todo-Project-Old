@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using src.Models;
+using TodoApi.Models;
 
-namespace src.Data
+namespace TodoApi.Data
 {
     public class AppDbContext : DbContext
     {

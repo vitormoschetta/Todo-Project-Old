@@ -1,15 +1,26 @@
-namespace src.Models
+using TodoApi.Models;
+
+namespace TodoApi.Models
 {
     public class GenericResponse
     {
-        public GenericResponse(bool success, string message = "", object data = null)
+        public GenericResponse() { }
+
+        public GenericResponse(string message, object data = null)
         {
-            Success = success;
             Message = message;
             Data = data;
+            OutputType = EOutputType.Success;
         }
 
-        public bool Success { get; set; }
+        public GenericResponse(string message, EOutputType outputType)
+        {
+            Message = message;
+            OutputType = outputType;
+        }
+
+        public EOutputType OutputType { get; set; }
+        public bool Success => OutputType == EOutputType.Success ? true : false;
         public string Message { get; set; }
         public object Data { get; set; }
     }

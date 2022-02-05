@@ -13,11 +13,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - 5000:8080
     expose:
-      - 5000   
-    volumes:
-      - ./TodoApi/appsettings.DockerDevelopment.json:/app/appsettings.json
+      - 5000
+    environment:
+      CONNECTION_STRING: "server=todoapi.db;user=root;password=MySql2022;database=todoapidb"
+    # volumes:
+    #   - ./TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json
     networks:
       - todoapi
     depends_on:
@@ -27,7 +29,7 @@ services:
     container_name: todoapi.db
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: "MySql2019!"
+      MYSQL_ROOT_PASSWORD: "MySql2022"
       MYSQL_DATABASE: "todoapidb"
     ports:
       - "3306:3306"  

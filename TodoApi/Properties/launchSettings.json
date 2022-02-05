@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "src": {
+    "TodoApi": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

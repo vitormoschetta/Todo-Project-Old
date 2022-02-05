@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using src.Data;
+using TodoApi.Data;
 
-namespace src.Data.Migrations
+namespace TodoApi.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220129025523_initial")]
+    [Migration("20220205201054_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace src.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.5");
 
-            modelBuilder.Entity("src.Models.TodoItem", b =>
+            modelBuilder.Entity("TodoApi.Models.TodoItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

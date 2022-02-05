@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using MySql.EntityFrameworkCore.Metadata;
 
-namespace src.Data.Migrations
+namespace TodoApi.Data.Migrations
 {
     public partial class initial : Migration
     {
