@@ -1,14 +1,40 @@
 @page "/submodule/todo"
 @using Models
+@using TodoApp.Components.Icons
 @inject Services.ITodoService todoService
 @inject NavigationManager navigationManager
+@inject IJSRuntime JS
 
 
-<h1>Todo list</h1>
+<NavLink href="/biobuyers/clientsettings/add">
+    <Button Type="@ButtonType.Primary">Novo</Button>
+</NavLink>
+
+<Table TItem="@Todo" DataSource="@todos" PageSize="@_pageSize">
+    <RowTemplate>
+        <Column @bind-Field="@context.Id" Sortable />
+        <Column @bind-Field="@context.Done" Sortable />
+        <Column @bind-Field="@context.Title" Sortable />
+        <ActionColumn>
+            <Space>
+                <SpaceItem>
+                    <a href="/submodule/todo/edit/@context.Id">
+                        <IconEdit />
+                    </a>
+                </SpaceItem>
+                <SpaceItem style="margin-left: 1em;">
+                    <Button style="border: none;" @onclick="@(e => ShowDeleteConfirm(context.Id.ToString()))">
+                        <IconDelete />
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </RowTemplate>
+</Table>
 
 
 @code {
-    IEnumerable<Todo> todos;
+    IList<Todo> todos;
     Todo todo;
     bool _modalDeleteVisible = false;
     int _pageSize = 5;
@@ -16,13 +42,20 @@
     protected override async Task OnInitializedAsync()
     {
         try
-        {
-            @* todos = new List<Todo>(); *@
-            var (httpStatuscode, todos) = await todoService.GetAll();
+        {            
+            (_, todos) = await todoService.GetAll();
+            var titles = todos.Select(x => x.Done);
+
+             await JS.InvokeAsync<string>("alert", string.Join(", ", titles));
         }
         catch (Exception ex)
         {
             navigationManager.NavigateTo($"/error/{ex.Message}", false);
         }
+    }
+
+    private void ShowDeleteConfirm(string id)
+    {
+
     }
 }

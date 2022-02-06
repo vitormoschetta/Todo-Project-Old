@@ -23,9 +23,7 @@ namespace TodoApp.Services
 
             using (HttpResponseMessage httpResponse = await httpClient.GetAsync(queryString))
             {
-                string content = await httpResponse.Content.ReadAsStringAsync();
-
-                Console.WriteLine(content);
+                string content = await httpResponse.Content.ReadAsStringAsync();                
 
                 if (httpResponse.StatusCode != HttpStatusCode.OK)
                 {
