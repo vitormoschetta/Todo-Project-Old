@@ -1,3 +1,28 @@
 @page "/submodule/todo"
+@using Models
+@inject Services.ITodoService todoService
+@inject NavigationManager navigationManager
 
-Todo list
+
+<h1>Todo list</h1>
+
+
+@code {
+    IEnumerable<Todo> todos;
+    Todo todo;
+    bool _modalDeleteVisible = false;
+    int _pageSize = 5;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            @* todos = new List<Todo>(); *@
+            var (httpStatuscode, todos) = await todoService.GetAll();
+        }
+        catch (Exception ex)
+        {
+            navigationManager.NavigateTo($"/error/{ex.Message}", false);
+        }
+    }
+}

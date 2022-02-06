@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using TodoApp.Services;
 
 namespace TodoApp
 {
@@ -14,7 +15,8 @@ namespace TodoApp
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddAntDesign();
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<ITodoService, TodoService>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(@"http://localhost:8080/api/")});
 
             await builder.Build().RunAsync();
         }
