@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TodoApp.Models;
@@ -18,9 +16,9 @@ namespace TodoApp.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<(HttpStatusCode, List<Todo>)> GetAll()
+        public async Task<(HttpStatusCode, IEnumerable<Todo>)> GetAll()
         {
-            string queryString = "TodoItem";
+            string queryString = "http://localhost:8080/api/TodoItem";
 
             using (HttpResponseMessage httpResponse = await httpClient.GetAsync(queryString))
             {
@@ -31,7 +29,7 @@ namespace TodoApp.Services
                     throw new HttpRequestException();
                 }
 
-                var response = JsonConvert.DeserializeObject<List<Todo>>(content);
+                var response = JsonConvert.DeserializeObject<IEnumerable<Todo>>(content);
 
                 return (httpResponse.StatusCode, response);
             }
