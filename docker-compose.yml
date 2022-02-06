@@ -1,17 +1,28 @@
 version: '3'
 
 networks: 
-  todoapi:      
+  todonetwork:      
     driver: bridge
-    name: todoapi
+    name: todo-network
 
 services:
+
   app:
-    container_name: todoapi.app
+    container_name: todoapp
+    image: vitormoschetta/todoapp
+    build:
+      context: .
+      dockerfile: TodoAppBlazorServer.Dockerfile
+    network_mode: "host"
+    environment:
+      SERVER_URL: "http://localhost:5000/api/"
+
+  api:
+    container_name: todoapi
     image: vitormoschetta/todoapi
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: TodoApi.Dockerfile
     ports:
       - 5000:8080
     expose:
@@ -21,7 +32,7 @@ services:
     # volumes:
     #   - ./TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json
     networks:
-      - todoapi
+      - todonetwork
     depends_on:
       - db
 
@@ -34,5 +45,5 @@ services:
     ports:
       - "3306:3306"  
     networks:
-      - todoapi
+      - todonetwork
    

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -14,15 +15,17 @@ namespace TodoApp.Services
         public TodoService(HttpClient httpClient)
         {
             this.httpClient = httpClient;
+            var serverUrl = Startup.ServerUrl.EndsWith('/') ? Startup.ServerUrl : $"{Startup.ServerUrl}/";
+            this.httpClient.BaseAddress = new Uri(Startup.ServerUrl);
         }
 
         public async Task<(HttpStatusCode, IEnumerable<Todo>)> GetAll()
         {
-            string queryString = "http://localhost:8080/api/TodoItem";
+            string queryString = "TodoItem";
 
             using (HttpResponseMessage httpResponse = await httpClient.GetAsync(queryString))
             {
-                string content = await httpResponse.Content.ReadAsStringAsync();                
+                string content = await httpResponse.Content.ReadAsStringAsync();
 
                 if (httpResponse.StatusCode != HttpStatusCode.OK)
                 {

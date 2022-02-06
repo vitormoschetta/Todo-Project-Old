@@ -17,11 +17,11 @@ docker-compose up -d --build db
 <br>
 
 
-### Subir Container da Aplicação
+### Subir Container da API
 
-A aplicação **TodoApi** verifica se existe uma **variável de ambiente** com chave "CONNECTION_STRING". Existindo ela usa o valor dessa variável para setar a conexão com o banco de dados. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
+A API **TodoApi** verifica se existe uma **variável de ambiente** com chave "CONNECTION_STRING". Existindo ela usa o valor dessa variável para setar a conexão com o banco de dados. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
 
-Nosso Dockerfile também possibilita a passagem dessa variável de ambiente:
+Nosso **TodoApi.Dockerfile** também possibilita a passagem dessa variável de ambiente:
 ```
 ARG CONNECTION_STRING
 ENV CONNECTION_STRING=$CONNECTION_STRING
@@ -29,9 +29,9 @@ ENV CONNECTION_STRING=$CONNECTION_STRING
 
 Dessa forma, podemos rodar o seguintes comandos para Construir a imagem e para Subir o container, na sequência:
 ```
-docker build -t vitormoschetta/todoapi -f Dockerfile .
+sudo docker build -t vitormoschetta/todoapi -f TodoApi.Dockerfile .
 
-sudo docker run --name todoapi.app1 -d -e CONNECTION_STRING="server=todoapi.db;user=root;password=MySql2022;database=todoapidb" --network todoapi -p 5050:8080 vitormoschetta/todoapi
+sudo docker run --name todoapi01 -d -e CONNECTION_STRING="server=todoapi.db;user=root;password=MySql2022;database=todoapidb" --network todo-network -p 5050:8080 vitormoschetta/todoapi
 ```
 
 Veja que conectamos na mesma **rede/network** que o container de banco de dados está (todoapi). **Containeres se comunicam pelo NOME**, e precisam estar na mesma Rede/Network.
@@ -44,21 +44,47 @@ Por padrão a aplicação roda na porta 8080, e portanto mapeamos essa porta do 
 <br>
 
 
+### Subir Container do APP
+
+A Aplicação **TodoAppBlazorServer** verifica se existe uma **variável de ambiente** com chave "SERVER_URL". Existindo ela usa o valor dessa variável para se comunciar com o servidor de API. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
+
+Nosso **TodoAppBlazorServer.Dockerfile** também possibilita a passagem dessa variável de ambiente:
+```
+ARG SERVER_URL
+ENV SERVER_URL=$SERVER_URL
+```
+
+Dessa forma, podemos rodar o seguintes comandos para Construir a imagem e para Subir o container, na sequência:
+```
+sudo docker build -t vitormoschetta/todoapp -f TodoAppBlazorServer.Dockerfile .
+
+sudo docker run --name todoapp2 -d -e SERVER_URL="http://localhost:5000/api/" --network host vitormoschetta/todoapp
+```
+
+<http://localhost:8080/>
+
+
+<br>
+
+
 ### docker-compose
 
-Porque não subimos o container da aplicação pelo `docker-compose`? Porque queremos apresentar as possibilidades existentes. O `docker-compose` também faz usso dessa variável de ambiente CONNECTION_STRING, ou seja, ele passa a variável para a imagem da aplicação, e aplicação consegue identificar o valor. Logo, poderíamos subir o container da aplicação assim:
+Porque não subimos o container da aplicação pelo `docker-compose`? Porque queremos apresentar as possibilidades existentes. O `docker-compose` também faz usso dessas variáveis de ambiente (CONNECTION_STRING para API e SERVER_URL para o APP) , ou seja, ele passa essas variáveis para as suas respectivas imagens. Logo, poderíamos subir os containeres assim:
 ```
+docker-compose up -d --build api
 docker-compose up -d --build app
 ```
 
-Poderíamos subir ambos os containeres (banco e aplicação) pelo `docker-compose`, assim:
+Poderíamos subir ambos os containeres (banco, api e app) pelo `docker-compose`, assim:
 ```
 docker-compose up -d --build
 ```
 
-Rodando a aplicação pelo compose, ficará acessível no seguinte endereço: 
+Rodando tudo pelo compose, podemos acessar API e Aplicação, respectivamente, nos seguintes endereços:
 
 <http://localhost:5000/swagger/index.html>
+
+<http://localhost:8080/>
 
 
 <br>
@@ -68,7 +94,7 @@ Rodando a aplicação pelo compose, ficará acessível no seguinte endereço:
 
 Uma alternativa à **variáveis de ambiente** são os VOLUMES. Veja que podemos mudar o arquivo de configuração (`appsettings.json`) a ser usado pela aplicação da seguinte forma:
 ```
-sudo docker run --name todoapi.app2 -d -v ~/Desktop/GitHub/TodoApi/TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json --network todoapi -p 6060:8080 vitormoschetta/todoapi
+sudo docker run --name todoapi02 -d -v ~/Desktop/GitHub/TodoApi/TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json --network todo-network -p 6060:8080 vitormoschetta/todoapi
 ```
 Veja que  substituímos o conteúdo do arquivo de configuração (`appsettings.json`) com o conteúdo que está no `appsettings.DockerDevelopment.json`.
 

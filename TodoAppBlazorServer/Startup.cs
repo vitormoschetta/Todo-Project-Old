@@ -9,6 +9,8 @@ namespace TodoApp
 {
     public class Startup
     {
+        public static string ServerUrl { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -20,8 +22,15 @@ namespace TodoApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddAntDesign();            
+            services.AddAntDesign();
             services.AddHttpClient<ITodoService, TodoService>();
+
+            var serverUrlEnv = Configuration["SERVER_URL"];
+
+            ServerUrl = string.IsNullOrWhiteSpace(serverUrlEnv)
+                ? Configuration["ServerUrl"]
+                : serverUrlEnv;
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
