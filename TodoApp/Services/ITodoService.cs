@@ -7,6 +7,6 @@ namespace TodoApp.Services
 {
     public interface ITodoService
     {
-        Task<(HttpStatusCode, List<Todo>)> GetAll();
+        Task<(HttpStatusCode, IEnumerable<Todo>)> GetAll();
     }
 }

@@ -7,12 +7,23 @@ networks:
 
 services:
 
+  staticapp:
+    container_name: todo-static-app
+    image: vitormoschetta/todo-static-app
+    build:
+      context: .
+      dockerfile: TodoStaticApp.Dockerfile
+    ports:
+      - 8090:80
+    networks:
+      - todonetwork
+
   app:
     container_name: todoapp
     image: vitormoschetta/todoapp
     build:
       context: .
-      dockerfile: TodoAppBlazorServer.Dockerfile
+      dockerfile: TodoApp.Dockerfile
     network_mode: "host"
     environment:
       SERVER_URL: "http://localhost:5000/api/"

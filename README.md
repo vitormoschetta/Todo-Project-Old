@@ -46,9 +46,9 @@ Por padrão a aplicação roda na porta 8080, e portanto mapeamos essa porta do 
 
 ### Subir Container do APP
 
-A Aplicação **TodoAppBlazorServer** verifica se existe uma **variável de ambiente** com chave "SERVER_URL". Existindo ela usa o valor dessa variável para se comunciar com o servidor de API. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
+A Aplicação **TodoApp** verifica se existe uma **variável de ambiente** com chave "SERVER_URL". Existindo ela usa o valor dessa variável para se comunciar com o servidor de API. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
 
-Nosso **TodoAppBlazorServer.Dockerfile** também possibilita a passagem dessa variável de ambiente:
+Nosso **TodoApp.Dockerfile** também possibilita a passagem dessa variável de ambiente:
 ```
 ARG SERVER_URL
 ENV SERVER_URL=$SERVER_URL

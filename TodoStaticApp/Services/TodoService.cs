@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TodoApp.Models;
@@ -15,24 +16,22 @@ namespace TodoApp.Services
         public TodoService(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            var serverUrl = Startup.ServerUrl.EndsWith('/') ? Startup.ServerUrl : $"{Startup.ServerUrl}/";
-            this.httpClient.BaseAddress = new Uri(Startup.ServerUrl);
         }
 
-        public async Task<(HttpStatusCode, IEnumerable<Todo>)> GetAll()
+        public async Task<(HttpStatusCode, List<Todo>)> GetAll()
         {
             string queryString = "TodoItem";
 
             using (HttpResponseMessage httpResponse = await httpClient.GetAsync(queryString))
             {
-                string content = await httpResponse.Content.ReadAsStringAsync();
+                string content = await httpResponse.Content.ReadAsStringAsync();                
 
                 if (httpResponse.StatusCode != HttpStatusCode.OK)
                 {
                     throw new HttpRequestException();
                 }
 
-                var response = JsonConvert.DeserializeObject<IEnumerable<Todo>>(content);
+                var response = JsonConvert.DeserializeObject<List<Todo>>(content);
 
                 return (httpResponse.StatusCode, response);
             }
