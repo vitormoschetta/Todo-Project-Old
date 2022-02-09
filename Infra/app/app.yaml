@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: todo-app
+  labels:
+    app: todo-app
+spec:
+  containers:
+    - name: todo-app
+      image: vitormoschetta/todoapp:latest
+      env:
+        - name: API_URL
+          value: "http://10.96.57.154:6001/api/" 
+      ports:
+        - containerPort: 6002

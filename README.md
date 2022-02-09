@@ -135,3 +135,14 @@ Atualmente se usa muito o que chamamos de Continuous Deployment (CD). Isso pode 
 As **credenciais e acessos de produção** podem ser setadas via variável de ambiente e/ou substituindo o arquivo de configuração da aplicação (appsettings.json) no momento de subir o novo container.
 
 A abordagem de VOLUME me parece mais segura do que Variáveis de Ambiente.
+
+
+
+<br>
+
+Enviar imagens para DockerHub
+
+```
+sudo docker push vitormoschetta/todoapp
+sudo docker push vitormoschetta/todoapi
+```

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: todo-api
+  labels:
+    app: todo-api
+spec:
+  containers:
+    - name: todo-api
+      image: vitormoschetta/todoapi:latest
+      env:
+        - name: CONNECTION_STRING
+          value: "server=10.96.0.93;user=root;password=MySql2022;database=todoapidb"      
+      ports:
+        - containerPort: 6001
