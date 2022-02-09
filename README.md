@@ -36,9 +36,9 @@ sudo docker run --name todoapi01 -d -e CONNECTION_STRING="server=todoapi.db;user
 
 Veja que conectamos na mesma **rede/network** que o container de banco de dados está (todoapi). **Containeres se comunicam pelo NOME**, e precisam estar na mesma Rede/Network.
 
-Por padrão a aplicação roda na porta 8080, e portanto mapeamos essa porta do container para a porta 5050 do HOST. Podemos acessar a aplicação no seguinte endereço:
+Por padrão a API roda na porta 6001, e mapeamos para a mesma porta no HOST:
 
-<http://localhost:5050/swagger/index.html>
+<http://localhost:6001/swagger/index.html>
 
 
 <br>
@@ -58,10 +58,10 @@ Dessa forma, podemos rodar o seguintes comandos para Construir a imagem e para S
 ```
 sudo docker build -t vitormoschetta/todoapp -f TodoAppBlazorServer.Dockerfile .
 
-sudo docker run --name todoapp2 -d -e SERVER_URL="http://localhost:5000/api/" --network host vitormoschetta/todoapp
+sudo docker run --name todoapp2 -d -e SERVER_URL="http://localhost:60001/api/" --network host vitormoschetta/todoapp
 ```
 
-<http://localhost:8080/>
+<http://localhost:6002/>
 
 
 <br>
@@ -82,9 +82,9 @@ docker-compose up -d --build
 
 Rodando tudo pelo compose, podemos acessar API e Aplicação, respectivamente, nos seguintes endereços:
 
-<http://localhost:5000/swagger/index.html>
+<http://localhost:6001/swagger/index.html>
 
-<http://localhost:8080/>
+<http://localhost:6002/>
 
 
 <br>
@@ -98,7 +98,7 @@ sudo docker run --name todoapi02 -d -v ~/Desktop/GitHub/TodoApi/TodoApi/appsetti
 ```
 Veja que  substituímos o conteúdo do arquivo de configuração (`appsettings.json`) com o conteúdo que está no `appsettings.DockerDevelopment.json`.
 
-Acessar: <http://localhost:6060/swagger/index.html>
+Acessar: <http://localhost:6001/swagger/index.html>
 
 
 <br>
@@ -112,7 +112,7 @@ sudo docker run --name todoapi.app3 -d --network host vitormoschetta/todoapi
 ```
 No comando acima já não foi necessário setar a porta, pois quando falamos que nossa rede é `--network host`, não há o que mapear para o host. Neste caso a porta será a que a própria aplicação expõe (8080).
 
-Acessar: <http://localhost:8080/swagger/index.html>
+Acessar: <http://localhost:6001/swagger/index.html>
 
 
 <br>

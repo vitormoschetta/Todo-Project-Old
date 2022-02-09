@@ -3,6 +3,7 @@
 @using TodoApp.Components.Icons
 @inject Services.ITodoService todoService
 @inject NavigationManager navigationManager
+@inject HttpClient Http
 @inject IJSRuntime JS
 
 
@@ -34,7 +35,7 @@
 
 
 @code {
-    IList<Todo> todos;
+    List<Todo> todos = new();
     Todo todo;
     bool _modalDeleteVisible = false;
     int _pageSize = 5;
@@ -42,9 +43,10 @@
     protected override async Task OnInitializedAsync()
     {
         try
-        {            
-            (_, todos) = await todoService.GetAll();
-            var titles = todos.Select(x => x.Done);             
+        {
+            await JS.InvokeAsync<string>("alert", Http.BaseAddress);
+
+            todos = await Http.GetFromJsonAsync<List<Todo>>("todoitem");
         }
         catch (Exception ex)
         {

@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: TodoStaticApp.Dockerfile
     ports:
-      - 8090:80
+      - 6003:80
     networks:
       - todonetwork
 
@@ -24,9 +24,13 @@ services:
     build:
       context: .
       dockerfile: TodoApp.Dockerfile
-    network_mode: "host"
+    #network_mode: "host"
     environment:
-      SERVER_URL: "http://localhost:5000/api/"
+      API_URL: "http://todoapi:6001/api/"
+    ports:
+      - 6002:6002
+    networks:
+      - todonetwork
 
   api:
     container_name: todoapi
@@ -35,13 +39,13 @@ services:
       context: .
       dockerfile: TodoApi.Dockerfile
     ports:
-      - 5000:8080
+      - 6001:6001
     expose:
-      - 5000
+      - 6001
     environment:
       CONNECTION_STRING: "server=todoapi.db;user=root;password=MySql2022;database=todoapidb"
     # volumes:
-    #   - ./TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json
+    #   - ./TodoApi/appsettings.Docker.json:/public/appsettings.json
     networks:
       - todonetwork
     depends_on:

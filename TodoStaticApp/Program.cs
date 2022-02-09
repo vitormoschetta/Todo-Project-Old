@@ -14,9 +14,13 @@ namespace TodoApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            var apiUrl = builder.HostEnvironment.IsDevelopment()
+                ? "http://localhost:6001/api/"
+                : "http://todoapi:6001/api/";            
+
             builder.Services.AddAntDesign();
             builder.Services.AddScoped<ITodoService, TodoService>();
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(@"http://localhost:5000/api/")});
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiUrl) });
 
             await builder.Build().RunAsync();
         }

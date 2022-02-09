@@ -25,11 +25,11 @@ namespace TodoApp
             services.AddAntDesign();
             services.AddHttpClient<ITodoService, TodoService>();
 
-            var serverUrlEnv = Configuration["SERVER_URL"];
+            var apiUrlEnv = Configuration["API_URL"];
 
-            ServerUrl = string.IsNullOrWhiteSpace(serverUrlEnv)
-                ? Configuration["ServerUrl"]
-                : serverUrlEnv;
+            ServerUrl = string.IsNullOrWhiteSpace(apiUrlEnv)
+                ? Configuration["ApiUrl"]
+                : apiUrlEnv;
 
         }
 

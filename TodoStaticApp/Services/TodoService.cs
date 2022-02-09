@@ -22,6 +22,8 @@ namespace TodoApp.Services
         {
             string queryString = "TodoItem";
 
+            Console.WriteLine(httpClient.BaseAddress);
+
             using (HttpResponseMessage httpResponse = await httpClient.GetAsync(queryString))
             {
                 string content = await httpResponse.Content.ReadAsStringAsync();                
