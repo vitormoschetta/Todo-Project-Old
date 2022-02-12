@@ -1,23 +1,40 @@
 
 
-### Criar Cluster
+### Cluster
+Criar:
 ```
 kind create cluster --name todo-project
 ```
 
-### Criar POD e Service
+Excluir:
 ```
-kind create cluster --name todo-project
-
-ubectl apply -f app.yaml
-ubectl apply -f app-service.yaml
+kind delete cluster --name todo-project
 ```
 
-### Excluir 
+### Services, Replicasets, Deployments, Pods, etc..
+Criar:
 ```
-kubectl delete -f app-service.yaml 
-kubectl delete -f app.yaml 
+kubectl apply -f <file>.yaml
 ```
+ou, executar todos .yaml de um mesmo diretório:
+```
+kubectl apply -f path/
+```
+
+Excluir:
+```
+kubectl delete -f <file>.yaml 
+```
+
+Consultar:
+```
+kubectl get services
+kubectl get deployments
+kubectl get pods
+kubectl get configmaps
+kubectl get nodes
+```
+
 
 ### Mapear porta de um Service do Cluster para o HOST
 ```
@@ -31,3 +48,7 @@ Acessar: <http://localhost:6002/>
 
 <https://k8slens.dev/>
 
+
+### Kubernets Lite para Producao:
+
+<https://k3s.io/>
