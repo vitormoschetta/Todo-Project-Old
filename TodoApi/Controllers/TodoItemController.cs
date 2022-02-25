@@ -26,8 +26,15 @@ namespace TodoApi.Controllers
 
             try
             {
-                await _context.TodoItem.AddAsync(command);
+                var validationCommand = command.Validate();
 
+                if (!validationCommand.IsValid)
+                {
+                    var message = string.Join(", ", validationCommand.Errors);
+                    return CustomResponse(new GenericResponse(message, EOutputType.BusinessValidation));
+                }
+
+                await _context.TodoItem.AddAsync(command);
                 await _context.SaveChangesAsync();
 
                 genericResponse = new GenericResponse("Sucessfuly");
@@ -52,6 +59,14 @@ namespace TodoApi.Controllers
             {
                 genericResponse = new GenericResponse("Invalid ID", EOutputType.InvalidInput);
                 return CustomResponse(genericResponse);
+            }
+
+            var validationCommand = command.Validate();
+
+            if (!validationCommand.IsValid)
+            {
+                var message = string.Join(", ", validationCommand.Errors);
+                return new GenericResponse(message, EOutputType.BusinessValidation);
             }
 
             try

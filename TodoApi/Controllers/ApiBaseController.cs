@@ -17,7 +17,7 @@ namespace TodoApi.Controllers
             {
                 EOutputType.Success => OkResponse(genericResponse),
                 EOutputType.InvalidInput => BadRequestResponse(genericResponse.Message),
-                EOutputType.BusinessValidation => Conflict(genericResponse.Message),
+                EOutputType.BusinessValidation => BadRequest(genericResponse.Message),
                 EOutputType.NotFound => NotFound(),
                 EOutputType.IntegrationError => BadRequestResponse(genericResponse.Message),
                 _ => StatusCode(500, genericResponse.Message),
