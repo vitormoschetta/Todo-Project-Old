@@ -57,6 +57,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "MySql2022"
       MYSQL_DATABASE: "todoapidb"
+    volumes:      
+      - ./data/:/tmp/seeds/
     ports:
       - "3306:3306"  
     networks:

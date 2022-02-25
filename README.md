@@ -118,6 +118,12 @@ Acessar: <http://localhost:6001/swagger/index.html>
 <br>
 
 
+### Seeding database 
+```
+sudo docker exec -it todoapi.db /bin/bash -c 'mysql -h todoapi.db -u root -pMySql2022 todoapidb < /tmp/seeds/seeds.sql'
+```
+
+
 ### Deploy em produção
 
 Atualmente se usa muito o que chamamos de Continuous Deployment (CD). Isso pode ser feito através de uma ferramente, como por exemplo o **Jenkis**, que basicamente se conecta no servidor de aplicação via SSH e executa uma sequência de comandos Bash/Shell, como uma espécie de esteira. Entre as acões realizadas estão:
