@@ -4,27 +4,23 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using TodoApi;
 using TodoApi.Models;
+using TodoIntegrationTests.Factories;
 using Xunit;
 
 
 namespace TodoIntegrationTests.ApiTests
 {
-    public class BasicTests : IClassFixture<WebApplicationFactory<Program>>
+    public class BasicTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly WebApplicationFactory<Program> _factory;
+        private readonly HttpClient client;
+        private readonly CustomWebApplicationFactory<Startup> _factory;
 
-        public BasicTests()
+        public BasicTests(CustomWebApplicationFactory<Startup> factory)
         {
-            _factory = new WebApplicationFactory<Program>()
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.UseStartup<StartupDevTest>();
-                });
+            _factory = factory;         
         }
 
 
@@ -73,7 +69,7 @@ namespace TodoIntegrationTests.ApiTests
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("Todo item", todoItems.FirstOrDefault(x => x.Id == 100).Title);
+            Assert.Equal(1, todoItems.Count);
         }
 
         [Theory]
