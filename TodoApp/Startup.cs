@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TodoApp.Helpers;
 using TodoApp.Services;
 
 namespace TodoApp
@@ -24,6 +25,7 @@ namespace TodoApp
             services.AddServerSideBlazor();
             services.AddAntDesign();
             services.AddHttpClient<ITodoService, TodoService>();
+            services.AddScoped<TodoNotification>();
 
             var apiUrlEnv = Configuration["API_URL"];
 
