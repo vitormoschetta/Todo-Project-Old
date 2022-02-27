@@ -7,7 +7,7 @@
 <Form Loading="loading" Model="@todo" OnFinish="OnFinish" Class="ant-advanced-search-form">
     <Row>
         <FormItem Label="Título">
-            <Input @bind-Value="@context.Title" />
+            <Input @bind-Value="@context.Title" id="titulo"/>
         </FormItem>
     </Row>
 
@@ -22,7 +22,7 @@
 
     <Row>
         <GridCol Span="24" Style="text-align:right;">
-            <Button Type="@ButtonType.Primary" HtmlType="submit">
+            <Button Type="@ButtonType.Primary" HtmlType="submit" id="confirmar">
                 Submit
             </Button>
             <Button Type="@ButtonType.Default" @onclick="Return">
