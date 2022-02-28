@@ -136,5 +136,11 @@ namespace TodoApi.Controllers
         {
             return await _context.TodoItem.FindAsync(id);
         }
+
+        [HttpGet("GetByTitle/{title}")]
+        public async Task<TodoItem> GetByTitle(string title)
+        {
+            return await _context.TodoItem.FirstOrDefaultAsync(x => x.Title == title);
+        }
     }
 }

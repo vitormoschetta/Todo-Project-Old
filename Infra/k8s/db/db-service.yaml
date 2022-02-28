@@ -7,4 +7,4 @@ spec:
   selector: 
     app: todo-db
   ports: 
-    - port: 3306          # ouve na porta 3306        
+    - port: 3306          # ouve na porta 3306

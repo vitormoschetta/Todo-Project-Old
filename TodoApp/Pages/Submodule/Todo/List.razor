@@ -14,7 +14,7 @@
     <RowTemplate>
         <Column @bind-Field="@context.Id" Sortable />
         <Column @bind-Field="@context.Title" Sortable />
-        <Column @bind-Field="@context.Done" Sortable />        
+        <Column @bind-Field="@context.Done" Sortable />
         <ActionColumn>
             <Space>
                 <SpaceItem>
@@ -23,7 +23,7 @@
                     </a>
                 </SpaceItem>
                 <SpaceItem style="margin-left: 1em;">
-                    <Button style="border: none;" @onclick="@(e => ShowDeleteConfirm(context.Id))">
+                    <Button style="border: none;" @onclick="@(e => ShowDeleteConfirm(context.Id))" id="btnExcluir">
                         <IconDelete />
                     </Button>
                 </SpaceItem>
@@ -35,14 +35,12 @@
 
 @code {
     IEnumerable<Todo> todos;
-    Todo todo;
-    bool _modalDeleteVisible = false;
     int _pageSize = 5;
 
     protected override async Task OnInitializedAsync()
     {
         try
-        {            
+        {
             (_, todos) = await _todoService.GetAll();
             var titles = todos.Select(x => x.Done);
         }

@@ -7,4 +7,4 @@ spec:
   selector: 
     app: todo-api    
   ports: 
-    - port: 6001          # ouve na porta 6001        
+    - port: 6001          # ouve na porta 6001

@@ -12,11 +12,9 @@ namespace TodoApp
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
+            builder.RootComponents.Add<App>("#app");            
 
-            var apiUrl = builder.HostEnvironment.IsDevelopment()
-                ? "http://localhost:6001/api/"
-                : "http://todoapi:6001/api/";            
+            var apiUrl = builder.Configuration["ApiUrl"];
 
             builder.Services.AddAntDesign();
             builder.Services.AddScoped<ITodoService, TodoService>();

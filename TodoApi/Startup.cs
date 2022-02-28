@@ -23,6 +23,15 @@ namespace TodoApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -32,7 +41,7 @@ namespace TodoApi
 
             var connectionStringEnv = Configuration["CONNECTION_STRING"];
 
-            var connectionString = string.IsNullOrWhiteSpace(connectionStringEnv)
+            var connectionString = (string.IsNullOrWhiteSpace(connectionStringEnv) || connectionStringEnv.Length < 10)
                 ? Configuration.GetConnectionString("DefaultConnection")
                 : connectionStringEnv;
 
@@ -61,16 +70,11 @@ namespace TodoApi
                 context.Database.Migrate();
             }
 
-            app.UseCors(cors => cors
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true)
-                .AllowCredentials()
-            );
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

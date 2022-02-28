@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoIntegrationTests", "Tod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoScreenTests", "TodoScreenTests\TodoScreenTests.csproj", "{EE79AC97-63C6-417B-B982-4B12F2B1C7FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoScreenTaskAutomation", "TodoScreenTaskAutomation\TodoScreenTaskAutomation.csproj", "{52C12F1E-19EC-4FF1-B40A-28869ADFECE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{EE79AC97-63C6-417B-B982-4B12F2B1C7FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE79AC97-63C6-417B-B982-4B12F2B1C7FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE79AC97-63C6-417B-B982-4B12F2B1C7FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52C12F1E-19EC-4FF1-B40A-28869ADFECE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52C12F1E-19EC-4FF1-B40A-28869ADFECE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52C12F1E-19EC-4FF1-B40A-28869ADFECE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52C12F1E-19EC-4FF1-B40A-28869ADFECE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

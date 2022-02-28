@@ -36,16 +36,12 @@
 
 @code {
     List<Todo> todos = new();
-    Todo todo;
-    bool _modalDeleteVisible = false;
     int _pageSize = 5;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            await JS.InvokeAsync<string>("alert", Http.BaseAddress);
-
             todos = await Http.GetFromJsonAsync<List<Todo>>("todoitem");
         }
         catch (Exception ex)

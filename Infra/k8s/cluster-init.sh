@@ -8,6 +8,6 @@ kubectl apply -f api/
 
 kubectl apply -f app/
 
-sleep 5
+sleep 20
 
 kubectl port-forward service/app-service 6002:6002

@@ -6,5 +6,5 @@ RUN dotnet publish /app/TodoApp.csproj -c Release -o /public
 FROM nginx:alpine
 WORKDIR /usr/local/webapp/nginx/html
 COPY --from=build /public/wwwroot .
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY /Infra/docker/TodoStaticApp/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80

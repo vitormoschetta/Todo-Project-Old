@@ -7,24 +7,20 @@ networks:
 
 services:
 
-  staticapp:
-    container_name: todo-static-app
-    image: vitormoschetta/todo-static-app
+  app-static:
+    container_name: todoapp.static
+    image: vitormoschetta/todoapp.static
     build:
       context: .
-      dockerfile: TodoStaticApp.Dockerfile
-    ports:
-      - 6003:80
-    networks:
-      - todonetwork
+      dockerfile: Infra/docker/TodoStaticApp/Dockerfile
+    network_mode: "host"
 
   app:
     container_name: todoapp
     image: vitormoschetta/todoapp
     build:
       context: .
-      dockerfile: TodoApp.Dockerfile
-    #network_mode: "host"
+      dockerfile: Infra/docker/TodoApp/Dockerfile    
     environment:
       API_URL: "http://todoapi:6001/api/"
     ports:
@@ -37,15 +33,17 @@ services:
     image: vitormoschetta/todoapi
     build:
       context: .
-      dockerfile: TodoApi.Dockerfile
+      dockerfile: Infra/docker/TodoApi/Dockerfile
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - 6001:6001
     expose:
-      - 6001
-    environment:
-      CONNECTION_STRING: "server=todoapi.db;user=root;password=MySql2022;database=todoapidb"
-    # volumes:
-    #   - ./TodoApi/appsettings.Docker.json:/public/appsettings.json
+      - 6001    
+    volumes:
+      - ./TodoApi/appsettings.Docker.json:/public/appsettings.json
     networks:
       - todonetwork
     depends_on:
@@ -55,10 +53,10 @@ services:
     container_name: todoapi.db
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: "MySql2022"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: "todoapidb"
     volumes:      
-      - ./data/:/tmp/seeds/
+      - ./Infra/docker/MySql/:/tmp/seeds/
     ports:
       - "3306:3306"  
     networks:

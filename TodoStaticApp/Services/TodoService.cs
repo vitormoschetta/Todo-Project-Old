@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TodoApp.Models;
@@ -22,11 +21,9 @@ namespace TodoApp.Services
         {
             string queryString = "TodoItem";
 
-            Console.WriteLine(httpClient.BaseAddress);
-
             using (HttpResponseMessage httpResponse = await httpClient.GetAsync(queryString))
             {
-                string content = await httpResponse.Content.ReadAsStringAsync();                
+                string content = await httpResponse.Content.ReadAsStringAsync();
 
                 if (httpResponse.StatusCode != HttpStatusCode.OK)
                 {
