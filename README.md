@@ -11,114 +11,107 @@ dotnet ef migrations add initial -o Data/Migrations
 
 ### Subir Container do Banco de Dados
 ```
-docker-compose up -d --build db
+docker-compose up -d db
 ```
 
 <br>
 
 
 ### Subir Container da API
-
-A API **TodoApi** verifica se existe uma **variável de ambiente** com chave "CONNECTION_STRING". Existindo ela usa o valor dessa variável para setar a conexão com o banco de dados. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
-
-Nosso **TodoApi.Dockerfile** também possibilita a passagem dessa variável de ambiente:
 ```
-ARG CONNECTION_STRING
-ENV CONNECTION_STRING=$CONNECTION_STRING
+docker-compose up -d --build api
 ```
-
-Dessa forma, podemos rodar o seguintes comandos para Construir a imagem e para Subir o container, na sequência:
-```
-sudo docker build -t vitormoschetta/todoapi -f TodoApi.Dockerfile .
-
-sudo docker run --name todoapi01 -d -e CONNECTION_STRING="server=todoapi.db;user=root;password=MySql2022;database=todoapidb" --network todo-network -p 5050:8080 vitormoschetta/todoapi
-```
-
-Veja que conectamos na mesma **rede/network** que o container de banco de dados está (todoapi). **Containeres se comunicam pelo NOME**, e precisam estar na mesma Rede/Network.
-
-Por padrão a API roda na porta 6001, e mapeamos para a mesma porta no HOST:
 
 <http://localhost:6001/swagger/index.html>
 
+##### Variáveis de ambiente
 
-<br>
+As configurações de conexão com banco de dados na API (**TodoApi**) podem ser definidas no arquivo de configuração **appsettings.json**. Essas informações também podem
+ser passadas por variável de ambiente. Declaramos essas variáveis em diversos locais, para serem usadas em ambiente diferentes, como se segue:
+
+- Variáveis de ambiente para execução da aplicação em **Container** via **docker-compose**:  
+Essas variáveis estão no arquivo `.env`.
+
+- Variáveis para execução em modo **Debug no VSCode**:  
+Verificar em `./vscode/launch.json`.
+
+- Variáveis para execução da aplicação via **linha de comando**:  
+Verificar em `TodoApi/Properties/launchSettings.json`.
 
 
-### Subir Container do APP
+Obs: Variáveis de ambiente possuem prioridade sobre os arquivos de configuração da aplicação (appsettings.json). Não existindo as variáveis, então os valores definidos nesse arquivo são aplicados.
 
-A Aplicação **TodoApp** verifica se existe uma **variável de ambiente** com chave "SERVER_URL". Existindo ela usa o valor dessa variável para se comunciar com o servidor de API. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
-
-Nosso **TodoApp.Dockerfile** também possibilita a passagem dessa variável de ambiente:
-```
-ARG SERVER_URL
-ENV SERVER_URL=$SERVER_URL
-```
-
-Dessa forma, podemos rodar o seguintes comandos para Construir a imagem e para Subir o container, na sequência:
-```
-sudo docker build -t vitormoschetta/todoapp -f TodoAppBlazorServer.Dockerfile .
-
-sudo docker run --name todoapp2 -d -e SERVER_URL="http://localhost:60001/api/" --network host vitormoschetta/todoapp
-```
-
-<http://localhost:6002/>
+Obs2: Quando a aplicação API é iniciada ela verifica a conexão com o banco de dados para executar as **Migrations** necessárias. Porém, se o banco de dados não estiver disponível a aplicação irá gerar uma exceção. Quando subimos os containeres juntos localmente, leva alguns segundos para o banco de dados ficar disponível, por isso usamos
+no **Dockerfile** da API o arquivo **wait_for_bootstrapping** (`./Infra/docker/wait_for_bootstrapping.sh`). Trata-se de um script `bash` que pega as variáveis de ambiente de
+conexão com o banco de dados e fica verificando se o banco está disponível antes de prosseguir com a inicialização da aplicação API.
 
 
 <br>
 
 
-### docker-compose
-
-Porque não subimos o container da aplicação pelo `docker-compose`? Porque queremos apresentar as possibilidades existentes. O `docker-compose` também faz usso dessas variáveis de ambiente (CONNECTION_STRING para API e SERVER_URL para o APP) , ou seja, ele passa essas variáveis para as suas respectivas imagens. Logo, poderíamos subir os containeres assim:
+### Subir Container do App
 ```
-docker-compose up -d --build api
 docker-compose up -d --build app
 ```
 
-Poderíamos subir ambos os containeres (banco, api e app) pelo `docker-compose`, assim:
-```
-docker-compose up -d --build
-```
-
-Rodando tudo pelo compose, podemos acessar API e Aplicação, respectivamente, nos seguintes endereços:
-
-<http://localhost:6001/swagger/index.html>
-
 <http://localhost:6002/>
 
-
-<br>
-
-
-### VOLUME
-
-Uma alternativa à **variáveis de ambiente** são os VOLUMES. Veja que podemos mudar o arquivo de configuração (`appsettings.json`) a ser usado pela aplicação da seguinte forma:
-```
-sudo docker run --name todoapi02 -d -v ~/Desktop/GitHub/TodoApi/TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json --network todo-network -p 6060:8080 vitormoschetta/todoapi
-```
-Veja que  substituímos o conteúdo do arquivo de configuração (`appsettings.json`) com o conteúdo que está no `appsettings.DockerDevelopment.json`.
-
-Acessar: <http://localhost:6001/swagger/index.html>
+A Aplicação **TodoApp** verifica se existe uma **variável de ambiente** com chave "API_URL_CONNECTION". Existindo ela usa o valor dessa variável para se comunciar com o servidor de API. Do contrário, a conexão é lida do arquivo de configuração `appsettings.json`.
 
 
 <br>
 
 
-### Network HOST
-
-Outra forma de subir o App pela linha de comando seria setando a **rede/network como HOST**. Neste caso a aplicação vai se comportar como se estivesse rodando na maquina local e não em um container:
+### Subir Container do Static App
 ```
-sudo docker run --name todoapi.app3 -d --network host vitormoschetta/todoapi
+docker-compose up -d --build app-static
 ```
-No comando acima já não foi necessário setar a porta, pois quando falamos que nossa rede é `--network host`, não há o que mapear para o host. Neste caso a porta será a que a própria aplicação expõe (8080).
 
-Acessar: <http://localhost:6001/swagger/index.html>
+<http://localhost:6003/>
+
+Diferente do App, que roda no framework Blazor Server, o Static App roda no Blazor Wasm, e gera arquivos estáticos para publicação. Sendo assim, ele não tem o roteamento
+por si só. Por isso, ao investigarmos seu Dockerfile (verificar em `Infra/TodoStaticApp/`) podemos perceber que uma imagem do **nginx** é utilizada como servidor.
+
+##### Network HOST
+
+Rodamos o Static App em modo HOST. Ou seja, ele roda em container mas é como se tivesse rodando direto no Sistem Operacional, e por isso não precisamos mapear uma porta, 
+pois a porta exposta pelo **nginx** é a porta que ficará disponível no HOST.
+
+Para subir o container com rede em modo HOST via linha de comando seria algo assim:
+```
+sudo docker run --name todoapp.static -d --network host vitormoschetta/todoapp.static
+```
+
+
+<br>
+
+
+### VOLUMES
+
+Uma alternativa à **variáveis de ambiente** são os VOLUMES. Podemos mudar o arquivo de configuração (`appsettings.json`) a ser usado pela aplicação da seguinte forma:
+```
+sudo docker run --name todoapi02 -d -v ./TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json --network todo-network -p 6004:6004 vitormoschetta/todoapi
+```
+O segredo aqui está no identificador de volume: `-v ./TodoApi/appsettings.DockerDevelopment.json:/public/appsettings.json`.  
+O que esse comando faz é criar uma ponte onde o arquivo `appsettings.DockerDevelopment.json` é visto dentro do container como se fosse o `appsettings.json`.
+
+<http://localhost:6004/swagger/index.html>
 
 
 <br>
 
 
 ### Seeding database 
+Ao subir o Container do banco de dados Mysql, usamos também um volume:
+```
+....
+volumes:      
+    - ./Infra/docker/MySql/:/tmp/seeds/
+...    
+```
+
+Nesse volume dizemos que todos os arquivos que estão na pasta local `./Infra/docker/MySql/` devem ser mapeados para a pasta `/tmp/seeds` no Container. 
+Perceba que temos um arquivo de scripts SQL inserem dois registros. Queremos executar esse script junto ao Container para que os dados sejam gerados no banco, e fazemos isso usando o seguinte comando:
 ```
 sudo docker exec -it todoapi.db /bin/bash -c 'mysql -h todoapi.db -u root -pMySql2022 todoapidb < /tmp/seeds/seeds.sql'
 ```
@@ -138,10 +131,7 @@ Atualmente se usa muito o que chamamos de Continuous Deployment (CD). Isso pode 
 - Parar o container da aplicação;
 - Subir novo container com imagem atualizada.
 
-As **credenciais e acessos de produção** podem ser setadas via variável de ambiente e/ou substituindo o arquivo de configuração da aplicação (appsettings.json) no momento de subir o novo container.
-
-A abordagem de VOLUME me parece mais segura do que Variáveis de Ambiente.
-
+As **credenciais e acessos de produção** podem ser setadas via variável de ambiente (arquivo `.env`) e/ou substituindo o arquivo de configuração da aplicação `appsettings.json` no momento de subir o novo container (técnica de uso de volumes).
 
 
 <br>

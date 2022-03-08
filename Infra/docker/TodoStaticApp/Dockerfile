@@ -7,4 +7,3 @@ FROM nginx:alpine
 WORKDIR /usr/local/webapp/nginx/html
 COPY --from=build /public/wwwroot .
 COPY /Infra/docker/TodoStaticApp/nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
