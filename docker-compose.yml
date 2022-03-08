@@ -39,10 +39,16 @@ services:
       DB_CONNECTION__USER: ${DB_CONNECTION__USER}
       DB_CONNECTION__PASSWORD: ${DB_CONNECTION__PASSWORD}
       DB_CONNECTION__DATABASE: ${DB_CONNECTION__DATABASE}
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${ASPNETCORE_Kestrel__Certificates__Default__Password}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: ${ASPNETCORE_Kestrel__Certificates__Default__Path}
+    volumes:
+      - ./Infra/docker/https:/https:ro
     ports:
       - 6001:6001
+      - 60001:60001
     expose:
-      - 6001    
+      - 6001
+      - 60001
     networks:
       - todonetwork
     depends_on:

@@ -68,6 +68,7 @@ namespace TodoApi
             if (env.IsProduction() || env.IsStaging())
             {
                 app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
             app.UseSwagger();
