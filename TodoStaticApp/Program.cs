@@ -14,7 +14,7 @@ namespace TodoApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");            
 
-            var apiUrl = builder.Configuration["ApiUrl"];
+            var apiUrl = builder.Configuration["API_URL_CONNECTION"];
 
             builder.Services.AddAntDesign();
             builder.Services.AddScoped<ITodoService, TodoService>();

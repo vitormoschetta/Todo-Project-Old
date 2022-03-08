@@ -10,7 +10,7 @@ namespace TodoApp
 {
     public class Startup
     {
-        public static string ServerUrl { get; set; }
+        public static string ApiUrlConnection { get; set; }
 
         public Startup(IConfiguration configuration)
         {
@@ -27,12 +27,7 @@ namespace TodoApp
             services.AddHttpClient<ITodoService, TodoService>();
             services.AddScoped<TodoNotification>();
 
-            var apiUrlEnv = Configuration["API_URL"];
-
-            ServerUrl = string.IsNullOrWhiteSpace(apiUrlEnv)
-                ? Configuration["ApiUrl"]
-                : apiUrlEnv;
-
+            ApiUrlConnection = Configuration["API_URL_CONNECTION"];
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

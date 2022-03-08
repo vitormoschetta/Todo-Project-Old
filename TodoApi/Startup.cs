@@ -39,11 +39,19 @@ namespace TodoApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TodoApi", Version = "v1" });
             });
 
-            var connectionStringEnv = Configuration["CONNECTION_STRING"];
+            var dbConnection = new
+            {
+                Host = Configuration["DB_CONNECTION:HOST"],
+                User = Configuration["DB_CONNECTION:USER"],
+                Pass = Configuration["DB_CONNECTION:PASSWORD"],
+                Name = Configuration["DB_CONNECTION:DATABASE"]
+            };
 
-            var connectionString = (string.IsNullOrWhiteSpace(connectionStringEnv) || connectionStringEnv.Length < 10)
-                ? Configuration.GetConnectionString("DefaultConnection")
-                : connectionStringEnv;
+            var connectionString =
+                $"server={dbConnection.Host};" +
+                $"user={dbConnection.User};" +
+                $"password={dbConnection.Pass};" +
+                $"database={dbConnection.Name}";
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseMySQL(connectionString));

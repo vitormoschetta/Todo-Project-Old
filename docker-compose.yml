@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: Infra/docker/TodoApp/Dockerfile    
     environment:
-      API_URL: "http://todoapi:6001/api/"
+      API_URL_CONNECTION: "http://todoapi:6001/api/"
     ports:
       - 6002:6002
     networks:
@@ -35,15 +35,14 @@ services:
       context: .
       dockerfile: Infra/docker/TodoApi/Dockerfile
     environment:
-      DB_HOST: ${DB_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_CONNECTION__HOST: ${DB_CONNECTION__HOST}
+      DB_CONNECTION__USER: ${DB_CONNECTION__USER}
+      DB_CONNECTION__PASSWORD: ${DB_CONNECTION__PASSWORD}
+      DB_CONNECTION__DATABASE: ${DB_CONNECTION__DATABASE}
     ports:
       - 6001:6001
     expose:
       - 6001    
-    volumes:
-      - ./TodoApi/appsettings.Docker.json:/public/appsettings.json
     networks:
       - todonetwork
     depends_on:
@@ -53,7 +52,7 @@ services:
     container_name: todoapi.db
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: MySql2022
       MYSQL_DATABASE: "todoapidb"
     volumes:      
       - ./Infra/docker/MySql/:/tmp/seeds/

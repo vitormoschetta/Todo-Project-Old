@@ -16,8 +16,8 @@ namespace TodoApp.Services
         public TodoService(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            var serverUrl = Startup.ServerUrl.EndsWith('/') ? Startup.ServerUrl : $"{Startup.ServerUrl}/";
-            this.httpClient.BaseAddress = new Uri(Startup.ServerUrl);
+            var serverUrl = Startup.ApiUrlConnection.EndsWith('/') ? Startup.ApiUrlConnection : $"{Startup.ApiUrlConnection}/";
+            this.httpClient.BaseAddress = new Uri(serverUrl);
         }
 
         public async Task<(HttpStatusCode, IEnumerable<Todo>)> GetAll()

@@ -18,7 +18,11 @@
                 "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DB_CONNECTION__HOST": "localhost",
+                "DB_CONNECTION__USER": "root",
+                "DB_CONNECTION__PASSWORD": "MySql2022",
+                "DB_CONNECTION__DATABASE": "todoapidb"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
