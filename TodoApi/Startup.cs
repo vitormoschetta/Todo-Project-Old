@@ -68,7 +68,7 @@ namespace TodoApi
             if (env.IsProduction() || env.IsStaging())
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
+                // app.UseHsts();
             }
 
             app.UseSwagger();
@@ -79,7 +79,7 @@ namespace TodoApi
                 context.Database.Migrate();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

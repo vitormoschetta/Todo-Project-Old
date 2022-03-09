@@ -40,14 +40,12 @@ docker login
 Informar username e password.
 
 
-#### Subir o certificado HTTPS para executar no container
-
 
 
 #### Executar Container
 Necessário ter um arquivo `.env` com as informações de conexão com o banco de dados, seguindo o padrão do arquivo que está neste projeto.
 ```
-docker run -d --name todoapi --restart=always --env-file=./.env -v /home/ubuntu/https/:/https:ro -p 6001:6001 -p 60001:60001 --log-opt max-size=100m --log-opt max-file=50 vitormoschetta/todoapi:latest
+docker run -d --name todoapi --restart=always --env-file=./.env -p 80:6001 --log-opt max-size=100m --log-opt max-file=50 vitormoschetta/todoapi:latest
 ```
 
 
