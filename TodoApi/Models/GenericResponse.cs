@@ -20,7 +20,7 @@ namespace TodoApi.Models
         }
 
         public EOutputType OutputType { get; set; }
-        public bool Success => OutputType == EOutputType.Success ? true : false;
+        public bool Success => OutputType == EOutputType.Success;
         public string Message { get; set; }
         public object Data { get; set; }
     }

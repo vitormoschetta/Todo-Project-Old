@@ -1,16 +1,17 @@
 ## Passos necessários para publicar essa aplicaçao no Amazon Web Service (AWS)
 
-### Criar Security Group
+
+## Criar Security Group
 Liberar as seguintes regras de entrada (inbound rules):
 - SSH
 - HTTP
 
 
-#### Criar uma instância RDS MySql
+## Criar uma instância RDS MySql
 
 
 
-#### Criar uma instância EC2 Ubuntu para API
+## Criar uma instância EC2 Ubuntu para API
 Atribuir Secuciry Group criado anteriormente.
 
 
@@ -33,7 +34,7 @@ mysql -u <rds_user> -h <...rds.amazonaws.com> -p<rds_password>
 <https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-pt>
 
 
-#### Fazer login na conta DockerHub que contém as imagens necessárias
+##### Fazer login na conta DockerHub que contém as imagens necessárias
 ```
 docker login
 ```
@@ -50,7 +51,12 @@ docker run -d --name todoapi --restart=always --env-file=./.env -p 80:6001 --log
 
 
 
-#### Criar uma instância EC2 Ubuntu para APP
+## Criar uma instância EC2 Ubuntu para APP
+
+#### Instalar Docker no EC2
+
+<https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04-pt>
+
 
 #### Fazer login na conta DockerHub que contém as imagens necessárias
 ```
