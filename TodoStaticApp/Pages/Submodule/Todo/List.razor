@@ -1,13 +1,11 @@
 @page "/submodule/todo"
 @using Models
 @using TodoApp.Components.Icons
-@inject Services.ITodoService todoService
-@inject NavigationManager navigationManager
-@inject HttpClient Http
-@inject IJSRuntime JS
+@inject Services.ITodoService _todoService
+@inject NavigationManager _navigationManager
+@inject Helpers.TodoNotification _notification
 
-
-<NavLink href="/biobuyers/clientsettings/add">
+<NavLink href="/submodule/todo/add">
     <Button Type="@ButtonType.Primary">Novo</Button>
 </NavLink>
 
@@ -24,7 +22,7 @@
                     </a>
                 </SpaceItem>
                 <SpaceItem style="margin-left: 1em;">
-                    <Button style="border: none;" @onclick="@(e => ShowDeleteConfirm(context.Id.ToString()))">
+                    <Button style="border: none;" @onclick="@(e => ShowDeleteConfirm(context.Id))">
                         <IconDelete />
                     </Button>
                 </SpaceItem>
@@ -35,23 +33,41 @@
 
 
 @code {
-    List<Todo> todos = new();
+    IEnumerable<Todo> todos;
     int _pageSize = 5;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            todos = await Http.GetFromJsonAsync<List<Todo>>("todoitem");
+            (_, todos) = await _todoService.GetAll();
+            var titles = todos.Select(x => x.Done);
         }
         catch (Exception ex)
         {
-            navigationManager.NavigateTo($"/error/{ex.Message}", false);
+            _navigationManager.NavigateTo($"/error/{ex.Message}", false);
         }
     }
 
-    private void ShowDeleteConfirm(string id)
+    private async Task ShowDeleteConfirm(int id)
     {
+        try
+        {
+            var (_, response) = await _todoService.Delete(id);
 
+            if (!response.Success)
+            {
+                _notification.NoticeWithIcon("Erro ao tentar excluir", response.Message, NotificationType.Error);
+                return;
+            }
+
+            _notification.NoticeWithIcon("Excluído com sucesso", string.Empty, NotificationType.Success);
+            todos = todos.Where(x => x.Id != id);
+
+        }
+        catch (Exception ex)
+        {
+            _notification.NoticeWithIcon("Erro ao tentar excluir", ex.Message, NotificationType.Error);
+        }
     }
 }

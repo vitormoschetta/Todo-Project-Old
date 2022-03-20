@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using TodoApp.Services;
+using TodoApp.Helpers;
 
 namespace TodoApp
 {
@@ -18,6 +19,7 @@ namespace TodoApp
 
             builder.Services.AddAntDesign();
             builder.Services.AddScoped<ITodoService, TodoService>();
+            builder.Services.AddScoped<TodoNotification>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiUrl) });
 
             await builder.Build().RunAsync();
