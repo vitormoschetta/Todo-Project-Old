@@ -14,8 +14,7 @@ using Xunit;
 namespace TodoIntegrationTests.ApiTests
 {
     public class BasicTests : IClassFixture<CustomWebApplicationFactory<Startup>>
-    {
-        private readonly HttpClient client;
+    {        
         private readonly CustomWebApplicationFactory<Startup> _factory;
 
         public BasicTests(CustomWebApplicationFactory<Startup> factory)
